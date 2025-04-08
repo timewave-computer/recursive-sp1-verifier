@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 sp1-zkvm = "4.1.7"
-sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.9.9-sp1-4.0.0-rc.3" }
 types.workspace = true
 borsh.workspace = true
 sp1-verifier = "4.1.7"

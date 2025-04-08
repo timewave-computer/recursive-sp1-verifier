@@ -19,6 +19,6 @@ pub fn main() {
         &proof.groth16_vk,
     )
     .unwrap();
-    // commit "true"
+    println!("Proof verified");
     sp1_zkvm::io::commit_slice(&[1]);
 }

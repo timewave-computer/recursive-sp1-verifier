@@ -19,5 +19,6 @@ dotenv = "0.15.0"
 sp1-verifier = "4.1.7"
 types.workspace = true
 borsh.workspace = true
+
 [build-dependencies]
 sp1-build = "4.1.7"
