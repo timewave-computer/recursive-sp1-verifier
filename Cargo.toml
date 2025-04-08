@@ -1,10 +1,9 @@
 [workspace]
-members = ["provable-program", "prover", "types", "recursive-program"]
+members = ["provable-program", "prover", "recursive-program"]
 resolver = "2"
 
 [workspace.dependencies]
 borsh = { version = "1.5.5", features = ["derive"] }
-types = { path = "types" }
 
 [patch.crates-io]
 sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", tag = "patch-sha2-0.10.8-sp1-4.0.0" }

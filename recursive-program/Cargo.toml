@@ -5,6 +5,4 @@ edition = "2021"
 
 [dependencies]
 sp1-zkvm = "4.1.7"
-types.workspace = true
-borsh.workspace = true
 sp1-verifier = "4.1.7"
