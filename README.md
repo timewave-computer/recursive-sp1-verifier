@@ -5,11 +5,11 @@
 > This MIGHT become an MVP implementation for merkle openings
 > in the Valence coprocessor Tree.
 
-## Overview
+## 1. Overview
 
 This project explores the implementation of a recursive (wrapped) Groth16 circuit using SP1's SHA2 precompile and Succinct's Gnark verifier. It's being developed as part of the investigation into different proof systems for the Valence coprocessor, with a focus on developer experience and practical implementation.
 
-## Features
+## 2. Features
 
 - SP1 SHA2 precompile integration
 - Succinct Gnark verifier implementation
@@ -17,7 +17,8 @@ This project explores the implementation of a recursive (wrapped) Groth16 circui
 - Basic benchmarking capabilities
 
 
-## Issues and Performance
+## 3. Issues and Performance
+
 We had to temporarily downgrade the SP1 prover to 3.x (from 4.1.7).
 The reason for this is that the recursive verification failed with an ambiguous 
 error related to precompiles. I assume the reason for this is that the recursive 
@@ -32,23 +33,40 @@ $ cargo update substrate-bn-succinct --precise 0.6.0-v4.1.4
 >[!NOTE]
 > We want to migrate to 4.x asap because it offers major performance benefits
 
-## Install any version of SP1 toolchain and prover utils
-```shell
-$ sp1up --version 4.1.7
-```
-
-### Prerequisites
+## 4. Prerequisites
 
 - Rust toolchain (latest stable version recommended)
 - SP1 dependencies
 - Succinct Gnark dependencies
 
-### Building and Running
+```shell
+$ sp1up --version 4.1.7
+```
 
-To build and run the prover:
 
-```bash
-RUST_LOG=info cargo run --release
+# Basic Benchmark Results
+## Macbook Pro M3 Max, 64 GB Ram
+
+1. Recursive circuit as described in `5. Building and Running`
+
+| Recursive Proofs | SHA2 Hashes | Time taken | Test Name | 
+|---|---|---|---|
+| 1 | 1 | 799.48s | None |
+| 1 | 10 | 823.10s | test_wrapper_merkle_proof |
+| 10 | 10 |  | test_wrapper_merkle_proof_batch |
+
+## 5. Run the Basic Benchmarks Yourself
+
+Single merkle proof with 10 hashes:
+
+```shell
+$ RUST_LOG=info cargo test test_wrapper_merkle_proof --release -- --nocapture
+```
+
+Batch of 10 merkle proofs with 10 hashes each:
+
+```shell
+$ RUST_LOG=info cargo test test_wrapper_merkle_proof_batch --release -- --nocapture
 ```
 
 This will perform the following steps:

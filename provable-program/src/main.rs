@@ -12,7 +12,10 @@ use sha2::{Digest, Sha256};
 
 pub fn main() {
     let input = sp1_zkvm::io::read::<String>();
-    let output = compute_digest(&borsh::to_vec(&input).unwrap());
+    let mut output = borsh::to_vec(&input).unwrap();
+    for i in 0..9 {
+        output = compute_digest(&borsh::to_vec(&output).unwrap());
+    }
     sp1_zkvm::io::commit_slice(&output);
 }
 
