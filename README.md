@@ -26,6 +26,11 @@ circuit hasn't been tested / updated since 4.x.
 >[!NOTE]
 > We want to migrate to 4.x asap because it offers major performance benefits
 
+## Install any version of SP1 toolchain and prover utils
+```shell
+$ sp1up --version 3.4.0 || 4.1.7
+```
+
 ### Prerequisites
 
 - Rust toolchain (latest stable version recommended)
