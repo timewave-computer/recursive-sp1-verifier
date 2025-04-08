@@ -23,12 +23,18 @@ The reason for this is that the recursive verification failed with an ambiguous
 error related to precompiles. I assume the reason for this is that the recursive 
 circuit hasn't been tested / updated since 4.x.
 
+A fix is on the way, in the meantime this command will lock the dependency:
+
+```shell
+$ cargo update substrate-bn-succinct --precise 0.6.0-v4.1.4
+```
+
 >[!NOTE]
 > We want to migrate to 4.x asap because it offers major performance benefits
 
 ## Install any version of SP1 toolchain and prover utils
 ```shell
-$ sp1up --version 4.1.7 || 4.1.7
+$ sp1up --version 4.1.7
 ```
 
 ### Prerequisites
