@@ -4,5 +4,5 @@ name = "recursive-program"
 edition = "2021"
 
 [dependencies]
-sp1-zkvm = "3.4.0"
-sp1-verifier = "3.4.0"
+sp1-zkvm = "4.1.7"
+sp1-verifier = "4.1.7"

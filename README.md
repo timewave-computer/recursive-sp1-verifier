@@ -28,7 +28,7 @@ circuit hasn't been tested / updated since 4.x.
 
 ## Install any version of SP1 toolchain and prover utils
 ```shell
-$ sp1up --version 3.4.0 || 4.1.7
+$ sp1up --version 4.1.7 || 4.1.7
 ```
 
 ### Prerequisites

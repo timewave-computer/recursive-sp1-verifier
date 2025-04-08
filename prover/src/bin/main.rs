@@ -17,7 +17,7 @@ fn prove_provable_program() -> (Vec<u8>, String, Vec<u8>) {
     stdin.write(&"Hello, Prover!");
     let (pk, vk) = client.setup(PROVABLE_ELF);
     let proof = client
-        .prove(&pk, stdin)
+        .prove(&pk, &stdin)
         .groth16()
         .run()
         .expect("failed to generate provable_program proof");
@@ -41,7 +41,7 @@ fn main() {
 
     let (pk, vk) = client.setup(RECURSIVE_ELF);
     let proof = client
-        .prove(&pk, stdin)
+        .prove(&pk, &stdin)
         .groth16()
         .run()
         .expect("failed to generate recursive proof");
