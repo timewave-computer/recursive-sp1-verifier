@@ -60,7 +60,7 @@ $ sp1up --version 4.1.7
 Single merkle proof with 10 hashes:
 
 ```shell
-$ RUST_LOG=info cargo test test_wrapper_merkle_proof --release -- --nocapture
+$ RUST_LOG=info cargo test test_wrapper_merkle_proof_single --release -- --nocapture
 ```
 
 Batch of 10 merkle proofs with 10 hashes each:

@@ -76,7 +76,7 @@ mod tests {
     use types::{Sp1Groth16Proof, Sp1Groth16ProofBatch};
 
     #[test]
-    fn test_wrapper_merkle_proof() {
+    fn test_wrapper_merkle_proof_single() {
         let start_time = Instant::now();
         sp1_sdk::utils::setup_logger();
         dotenv::dotenv().ok();
