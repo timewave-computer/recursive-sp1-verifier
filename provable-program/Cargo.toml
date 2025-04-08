@@ -1,0 +1,9 @@
+[package]
+version = "0.1.0"
+name = "provable-program"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm = "4.1.7"
+sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.9.9-sp1-4.0.0-rc.3" }
+borsh.workspace = true

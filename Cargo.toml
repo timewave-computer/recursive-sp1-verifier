@@ -1,0 +1,7 @@
+[workspace]
+members = ["provable-program", "prover", "types", "recursive-program"]
+resolver = "2"
+
+[workspace.dependencies]
+borsh = { version = "1.5.5", features = ["derive"] }
+types = { path = "types" }
