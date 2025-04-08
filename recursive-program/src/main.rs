@@ -17,9 +17,7 @@ pub fn main() {
 
     let result = Groth16Verifier::verify(&proof, &sp1_public_values, &sp1_vkey_hash, groth16_vk);
     match result {
-        Ok(()) => {
-            println!("Proof is valid");
-        }
+        Ok(()) => {}
         Err(e) => {
             println!("Error verifying proof: {:?}", e);
         }

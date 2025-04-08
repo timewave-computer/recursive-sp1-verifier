@@ -23,7 +23,6 @@ fn prove_provable_program() -> (Vec<u8>, String, Vec<u8>) {
         .expect("failed to generate provable_program proof");
 
     let vk_hash = vk.bytes32();
-    println!("Done proving provable_program, vk_hash: {:?}", vk_hash);
     (proof.bytes(), vk_hash, proof.public_values.to_vec())
 }
 
