@@ -9,9 +9,7 @@ name = "prover"
 path = "src/bin/main.rs"
 
 [dependencies]
-sp1-sdk = { git = "https://github.com/timewave-computer/sp1", branch = "jonas/patch-bls-0.8.0", features = [
-    "native-gnark",
-] }
+sp1-sdk = { version = "4.1.7", features = ["native-gnark"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 serde = { version = "1", default-features = false, features = ["derive"] }
 clap = { version = "4.0", features = ["derive", "env"] }
