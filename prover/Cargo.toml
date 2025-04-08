@@ -9,14 +9,14 @@ name = "prover"
 path = "src/bin/main.rs"
 
 [dependencies]
-sp1-sdk = { version = "4.1.7", features = ["native-gnark"] }
+sp1-sdk = { version = "3.4.0", features = ["native-gnark"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 serde = { version = "1", default-features = false, features = ["derive"] }
 clap = { version = "4.0", features = ["derive", "env"] }
 tracing = "0.1.40"
 hex = "0.4.3"
 dotenv = "0.15.0"
-sp1-verifier = "4.1.7"
+sp1-verifier = "3.4.0"
 
 [build-dependencies]
-sp1-build = "4.1.7"
+sp1-build = "3.4.0"

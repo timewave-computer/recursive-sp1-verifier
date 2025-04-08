@@ -10,39 +10,44 @@ use sp1_verifier::Groth16Verifier;
 pub const PROVABLE_ELF: &[u8] = include_elf!("provable-program");
 pub const RECURSIVE_ELF: &[u8] = include_elf!("recursive-program");
 
-fn main() {
-    sp1_sdk::utils::setup_logger();
-    dotenv::dotenv().ok();
-
+fn prove_provable_program() -> (Vec<u8>, String, Vec<u8>) {
     // generate a groth16 proof
     let client = ProverClient::new();
     let mut stdin = SP1Stdin::new();
     stdin.write(&"Hello, Prover!");
     let (pk, vk) = client.setup(PROVABLE_ELF);
     let proof = client
-        .prove(&pk, &stdin)
+        .prove(&pk, stdin)
         .groth16()
         .run()
         .expect("failed to generate provable_program proof");
 
     let vk_hash = vk.bytes32();
-    let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
     println!("Done proving provable_program, vk_hash: {:?}", vk_hash);
+    (proof.bytes(), vk_hash, proof.public_values.to_vec())
+}
+
+fn main() {
+    sp1_sdk::utils::setup_logger();
+    dotenv::dotenv().ok();
+
+    let (proof, vk_hash, public_values) = prove_provable_program();
 
     // verify a groth16 proof inside the circuit
     let client = ProverClient::new();
     let mut stdin = SP1Stdin::new();
-    stdin.write_vec(proof.bytes());
-    stdin.write_vec(proof.public_values.to_vec());
-    stdin.write(&vk.bytes32());
+    stdin.write_vec(proof);
+    stdin.write_vec(public_values);
+    stdin.write(&vk_hash);
 
     let (pk, vk) = client.setup(RECURSIVE_ELF);
     let proof = client
-        .prove(&pk, &stdin)
+        .prove(&pk, stdin)
         .groth16()
         .run()
         .expect("failed to generate recursive proof");
 
+    let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
     // verify final groth16 proof
     Groth16Verifier::verify(
         &proof.bytes(),

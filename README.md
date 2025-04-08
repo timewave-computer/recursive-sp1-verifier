@@ -16,7 +16,15 @@ This project explores the implementation of a recursive (wrapped) Groth16 circui
 - Recursive Groth16 circuit wrapping
 - Basic benchmarking capabilities
 
-## Getting Started
+
+## Issues and Performance
+We had to temporarily downgrade the SP1 prover to 3.x (from 4.1.7).
+The reason for this is that the recursive verification failed with an ambiguous 
+error related to precompiles. I assume the reason for this is that the recursive 
+circuit hasn't been tested / updated since 4.x.
+
+>[!NOTE]
+> We want to migrate to 4.x asap because it offers major performance benefits
 
 ### Prerequisites
 
@@ -39,7 +47,3 @@ This will perform the following steps:
 3. Verify that Groth16 proof inside an SP1 circuit (recursive circuit) to generate a new SP1 proof
 4. Wrap that new SP1 proof as Groth16
 5. Verify that new Groth16 proof outside the circuit (this would usually happen on-chain)
-
-## Project Status
-
-This is a work in progress and experimental project. The implementation may evolve into an MVP for merkle openings in the Valence coprocessor Tree.

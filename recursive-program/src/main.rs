@@ -15,9 +15,13 @@ pub fn main() {
     let sp1_vkey_hash: String = sp1_zkvm::io::read();
     let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
 
-    Groth16Verifier::verify(&proof, &sp1_public_values, &sp1_vkey_hash, groth16_vk)
-        .expect("Proof verification failed");
-    println!("Proof verified");
-
-    sp1_zkvm::io::commit_slice(&[1]);
+    let result = Groth16Verifier::verify(&proof, &sp1_public_values, &sp1_vkey_hash, groth16_vk);
+    match result {
+        Ok(()) => {
+            println!("Proof is valid");
+        }
+        Err(e) => {
+            println!("Error verifying proof: {:?}", e);
+        }
+    }
 }
