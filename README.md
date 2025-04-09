@@ -1,9 +1,12 @@
 # Recursive SP1 Circuit
 
->[!NOTE]
+> This project is part of a larger investigation into proof systems for the Valence coprocessor. For detailed background information and motivation, please see our [Context Document](context.md) 📚
+>
 > Work in progress.
 > This MIGHT become an MVP implementation for merkle openings
 > in the Valence coprocessor Tree.
+
+[![Learn More About Valence ZK](https://img.shields.io/badge/_Learn_More_About_Valence_ZK-2EA44F?style=for-the-badge&logo=github&logoColor=white)](context.md)
 
 ## 1. Overview
 [Click to see Context](context.md)
