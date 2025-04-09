@@ -1,0 +1,19 @@
+[package]
+name = "jonas-groth16"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ark-ec = "0.5"
+ark-ff = "0.5"
+num-bigint = "0.4.6"
+serde = "1"
+bn = { version = "0.5", package = "zeropool-bn", default-features = false }
+num-traits = "0.2"
+
+ark-bn254 = { version = "0.5", optional = true }
+ark-bls12-381 = { version = "0.5", optional = true }
+
+[features]
+bn254 = ["ark-bn254"]
+bls12_381 = ["ark-bls12-381"]

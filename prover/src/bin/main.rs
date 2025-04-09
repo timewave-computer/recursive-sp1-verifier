@@ -4,7 +4,6 @@
 //! ```shell
 //! RUST_LOG=info cargo run --release
 //! ```
-
 use std::time::Instant;
 
 use sp1_sdk::{include_elf, HashableKey, ProverClient, SP1Stdin};

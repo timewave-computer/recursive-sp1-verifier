@@ -83,3 +83,9 @@ This will perform the following steps:
 4. Wrap that new SP1 proof as Groth16
 5. Verify that new Groth16 proof outside the circuit (this would usually happen on-chain)
 
+
+# 2. Arkworks 
+In order to accelerate the co-processor opening proof speed, we're working on a custom Groth16 verifier
+that can leverage the `bls12_381` precompile to verify Arkworks proofs. The goal is to generate a lot of
+merkle opening ZKPs quickly and then wrap them in a single SP1 circuit. We still have to do the heavy lifting 
+in the end, but only once for a batch of arbitrary size.

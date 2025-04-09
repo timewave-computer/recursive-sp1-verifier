@@ -15,6 +15,9 @@
         "-A",
         "incomplete-features"
     ],
+    "rust-analyzer.cargo.features": [
+        "bls12_381"
+    ],
     "rust-analyzer.runnables.extraEnv": {
         "RUST_LOG": "debug",
         "RUSTFLAGS": "-Ctarget-cpu=native"
