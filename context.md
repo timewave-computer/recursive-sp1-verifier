@@ -1,4 +1,4 @@
-# 🧠 Zero Knowledge Coprocessor for Cross-Chain Merkle Proofs
+# Zero Knowledge Coprocessor for Cross-Chain Merkle Proofs
 
 > **Proposal**: This document outlines a detailed and suggested architecture and development strategy for building a zero knowledge coprocessor capable of verifying cross-chain Merkle proofs in a recursive and efficient manner.  
 > It is intended to guide the team — not prescribe immutable rules — and may evolve as implementation proceeds.
