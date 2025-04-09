@@ -1,4 +1,4 @@
-# Recursive SP1 Circuit
+# Recursive ZK Circuits
 
 > This project is part of a larger investigation into proof systems for the Valence coprocessor. For detailed background information and motivation, please see our [Context Document](context.md) 📚
 >
@@ -8,12 +8,14 @@
 
 [![Learn More About Valence ZK](https://img.shields.io/badge/_Learn_More_About_Valence_ZK-2EA44F?style=for-the-badge&logo=github&logoColor=white)](context.md)
 
-## 1. Overview
+# 1. Recursive SP1 Circuit
+
+## 1.1 Overview
 [Click to see Context](context.md)
 
 This project explores the implementation of a recursive (wrapped) Groth16 circuit using SP1's SHA2 precompile and Succinct's Gnark verifier. It's being developed as part of the investigation into different proof systems for the Valence coprocessor, with a focus on developer experience and practical implementation.
 
-## 2. Features
+## 1.2 Features
 
 - SP1 SHA2 precompile integration
 - Succinct Gnark verifier implementation
@@ -21,7 +23,7 @@ This project explores the implementation of a recursive (wrapped) Groth16 circui
 - Basic benchmarking capabilities
 
 
-## 3. Issues and Performance
+## 1.3 Issues and Performance
 
 We had to temporarily downgrade the SP1 prover to 3.x (from 4.1.7).
 The reason for this is that the recursive verification failed with an ambiguous 
@@ -37,7 +39,7 @@ $ cargo update substrate-bn-succinct --precise 0.6.0-v4.1.4
 >[!NOTE]
 > We want to migrate to 4.x asap because it offers major performance benefits
 
-## 4. Prerequisites
+## 1.4 Prerequisites
 
 - Rust toolchain (latest stable version recommended)
 - SP1 dependencies
@@ -48,8 +50,8 @@ $ sp1up --version 4.1.7
 ```
 
 
-# Basic Benchmark Results
-## Macbook Pro M3 Max, 64 GB Ram
+## 1.5 Basic Benchmark Results
+### Macbook Pro M3 Max, 64 GB Ram
 
 1. Recursive circuit as described in `5. Building and Running`
 
@@ -80,3 +82,6 @@ This will perform the following steps:
 3. Verify that Groth16 proof inside an SP1 circuit (recursive circuit) to generate a new SP1 proof
 4. Wrap that new SP1 proof as Groth16
 5. Verify that new Groth16 proof outside the circuit (this would usually happen on-chain)
+
+
+# 2. Recursive Plonky2 Circuit in Risc0
