@@ -33,18 +33,23 @@ The coprocessor receives Merkle proofs and performs the following:
 
 - **Batching**:
   - Groups Merkle proofs by target domain and batch interval
-- **Recursive ZK Verification**:
-  - Verifies the entire batch using a recursive proof system
+- **Recursive ZK Verification** (✳️ see note below):
+  - Verifies the entire batch using recursive proof systems
   - Produces a single ZKP (e.g., Groth16) for the batch
+
+✳️ **We require two distinct recursive proofs**:
+  1. **Domain State Proofs** – For verifying individual domain-level Merkle proofs (e.g., account/storage proofs from Ethereum, Cosmos)
+  2. **SMT Update Proofs** – For verifying updates to the Sparse Merkle Tree that tracks latest trusted roots for each domain
+
 - **Trusted Root Verification**:
   - Maintains an on-chain **Sparse Merkle Tree (SMT)** that stores the *latest finalized* trusted state root for each domain
-  - This SMT is updated via light clients
+  - This SMT is updated via light clients or proof-based SMT updates
 
 The SMT allows:
 - Storing and retrieving the latest root for a given chain
 - Verifying that each batched proof is valid against the known state
 
-It is cruical that the SMT root must be published on-chain every ERA, so that proofs can be verified
+It is crucial that the SMT root must be published on-chain every ERA, so that proofs can be verified
 against the current state.
 
 All recursive ZKPs are verified against the SMT root, which itself becomes a **public input** in the recursive circuit.
@@ -55,12 +60,12 @@ All recursive ZKPs are verified against the SMT root, which itself becomes a **p
 
 We have a variety of standalone components that now need to be connected into an MVP pipeline:
 
-| Component                                     | Status          |
-|----------------------------------------------|-----------------|
-| Sparse Merkle Tree (SMT)                     | ✅ Implemented  |
-| Merkle Proof Library (Cosmos ICS23 + ETH)    | ✅ Implemented  |
-| Recursive ZK Circuit                         | ✅ Working prototype |
-| ZK Light Clients (ETH + Cosmos, via Succinct)| ✅ Available    |
+| Component                                     | Status              |
+|----------------------------------------------|---------------------|
+| Sparse Merkle Tree (SMT)                     | ✅ Implemented      |
+| Merkle Proof Library (Cosmos ICS23 + ETH)    | ✅ Implemented      |
+| Recursive ZK Circuit                         | ✅ Working prototype|
+| ZK Light Clients (ETH + Cosmos, via Succinct)| ✅ Available        |
 
 ---
 
