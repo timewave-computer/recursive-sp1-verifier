@@ -44,6 +44,9 @@ The SMT allows:
 - Storing and retrieving the latest root for a given chain
 - Verifying that each batched proof is valid against the known state
 
+It is cruical that the SMT root must be published on-chain every ERA, so that proofs can be verified
+against the current state.
+
 All recursive ZKPs are verified against the SMT root, which itself becomes a **public input** in the recursive circuit.
 
 ---
@@ -133,7 +136,7 @@ All verification occurs **against the last known finalized root**, which may hav
 ### 🔗 Phase 2: Light Client Integration
 
 - Connect to Succinct’s light clients:
-  - Ethereum (Jonas)
+  - Ethereum
   - Cosmos-based (e.g. Neutron)
 - Automate root posting to the SMT
 
