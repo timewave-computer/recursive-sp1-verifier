@@ -14,6 +14,7 @@ use ark_ec::{bls12::Bls12 as Model, pairing::Pairing, AffineRepr, CurveGroup};
 #[cfg(feature = "bn254")]
 use ark_ec::{models::bn::Bn as Model, pairing::Pairing, AffineRepr, CurveGroup};
 use ark_ff::{BigInteger, PrimeField, Zero};
+use ark_serialize::CanonicalSerialize;
 use num_bigint::BigUint;
 
 #[cfg(feature = "bn254")]
@@ -45,6 +46,7 @@ pub fn negate_g1_affine(p: G1Affine) -> G1Affine {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn verify_groth16_proof(
     pi_a: G1Affine,
     pi_b: G2Affine,
@@ -78,6 +80,16 @@ pub fn verify_groth16_proof(
         (vk_x, vk_gamma2),
         (pi_c, vk_delta2),
     ];
+    use normal_bls::{G1Affine, G2Affine, G2Projective};
+    let first_point = terms.first().unwrap().0;
+    let mut point_compressed = vec![];
+    first_point
+        .serialize_compressed(&mut point_compressed)
+        .unwrap();
+    let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
+    let pi_a_inverse = G1Affine::from_compressed(&point_as_ref).unwrap();
+    // todo: wrap all other points in standard_bls form and use the precompile in SP1
+
     // compute pairing result and return is_zero?
     <Model<Config> as Pairing>::multi_pairing(
         vec![negate_g1_affine(pi_a), vk_alpha1, vk_x, pi_c],

@@ -168,18 +168,17 @@ mod tests {
         );
         assert!(is_valid);
     }
-}
+    use ark_ff::BigInteger;
+    use ark_ff::PrimeField;
+    use num_bigint::BigUint;
 
-use ark_ff::BigInteger;
-use ark_ff::PrimeField;
-use num_bigint::BigUint;
+    fn fq381_to_biguint(f: &FqBLS12_381) -> BigUint {
+        let ark_bigint = f.into_bigint();
+        let bytes = ark_bigint.to_bytes_be();
+        BigUint::from_bytes_be(&bytes)
+    }
 
-fn fq381_to_biguint(f: &FqBLS12_381) -> BigUint {
-    let ark_bigint = f.into_bigint();
-    let bytes = ark_bigint.to_bytes_be();
-    BigUint::from_bytes_be(&bytes)
-}
-
-fn convert_381_public_inputs_to_biguint(inputs: &[FqBLS12_381]) -> Vec<BigUint> {
-    inputs.iter().map(fq381_to_biguint).collect()
+    fn convert_381_public_inputs_to_biguint(inputs: &[FqBLS12_381]) -> Vec<BigUint> {
+        inputs.iter().map(fq381_to_biguint).collect()
+    }
 }

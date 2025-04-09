@@ -13,6 +13,8 @@ num-traits = "0.2"
 
 ark-bn254 = { version = "0.5", optional = true }
 ark-bls12-381 = { version = "0.5", optional = true }
+ark-serialize = "0.5"
+normal_bls = { package = "bls12_381", git = "https://github.com/zkcrypto/bls12_381", tag = "0.7.0" }
 
 [features]
 bn254 = ["ark-bn254"]
