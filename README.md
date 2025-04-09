@@ -6,7 +6,8 @@
 > in the Valence coprocessor Tree.
 
 ## 1. Overview
-[See Context]("context.md")
+[Click to see Context]("context.md")
+
 This project explores the implementation of a recursive (wrapped) Groth16 circuit using SP1's SHA2 precompile and Succinct's Gnark verifier. It's being developed as part of the investigation into different proof systems for the Valence coprocessor, with a focus on developer experience and practical implementation.
 
 ## 2. Features
