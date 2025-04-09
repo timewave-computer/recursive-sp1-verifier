@@ -83,5 +83,3 @@ This will perform the following steps:
 4. Wrap that new SP1 proof as Groth16
 5. Verify that new Groth16 proof outside the circuit (this would usually happen on-chain)
 
-
-# 2. Recursive Plonky2 Circuit in Risc0
