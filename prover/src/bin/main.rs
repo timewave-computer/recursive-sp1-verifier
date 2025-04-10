@@ -228,61 +228,39 @@ mod tests {
 
     #[test]
     fn test_smt_zk_proof_batch() {
+        let proof_count = 100;
         let start_time = Instant::now();
+
         let client = ProverClient::builder().network().build();
         let mut stdin = SP1Stdin::new();
         let context = "poem";
-
-        let data = [
-            [0x00, 0x00, 0x09],
-            [0x00, 0x00, 0x19],
-            [0x00, 0x00, 0x03],
-            [0x00, 0x00, 0x05],
-        ];
+        let mut data: Vec<[u8; 3]> = vec![[0x00, 0x00, 0x00]];
+        for i in 1..proof_count {
+            data.push([0x00, 0x00, i as u8]);
+        }
 
         let mut tree = MemorySmt::default();
-        let root = MemorySmt::empty_tree_root();
 
-        let mut proofs = [
-            SmtOpening::default(),
-            SmtOpening::default(),
-            SmtOpening::default(),
-            SmtOpening::default(),
-        ];
+        let mut root = [0; 32];
+        for entry in data.clone() {
+            root = tree.insert(root, context, entry.to_vec()).unwrap();
+        }
 
-        // R = 0
+        let mut proofs = vec![];
+        for entry in data {
+            proofs.push(tree.get_opening(context, root, &entry).unwrap().unwrap());
+        }
 
-        let root = tree.insert(root, context, data[0].to_vec()).unwrap();
-        proofs[0] = tree.get_opening(context, root, &data[0]).unwrap().unwrap();
-        assert_eq!(proofs[0].opening.len(), 0);
-        assert!(MemorySmt::verify(context, &root, &proofs[0]));
-        assert_eq!(&proofs[0].data, &data[0]);
+        assert_eq!(proofs.len(), proof_count);
 
-        //   R
-        //  / \
-        // _   o
-        //    / \
-        //   0   1
-
-        let root = tree.insert(root, context, data[1].to_vec()).unwrap();
-
-        proofs[0] = tree.get_opening(context, root, &data[0]).unwrap().unwrap();
-        proofs[1] = tree.get_opening(context, root, &data[1]).unwrap().unwrap();
-
-        let proof_batch = SmtOpeningBatch {
-            proofs: vec![
-                SmtOpeningInput {
-                    proof_serialized: borsh::to_vec(&proofs[0]).unwrap(),
-                    root,
-                    context: context.to_string(),
-                },
-                SmtOpeningInput {
-                    proof_serialized: borsh::to_vec(&proofs[1]).unwrap(),
-                    root,
-                    context: context.to_string(),
-                },
-            ],
-        };
+        let mut proof_batch = SmtOpeningBatch { proofs: vec![] };
+        for proof in proofs {
+            proof_batch.proofs.push(SmtOpeningInput {
+                proof_serialized: borsh::to_vec(&proof).unwrap(),
+                root,
+                context: context.to_string(),
+            });
+        }
 
         let proof_batch_serialized = borsh::to_vec(&proof_batch).unwrap();
         stdin.write_vec(proof_batch_serialized);
