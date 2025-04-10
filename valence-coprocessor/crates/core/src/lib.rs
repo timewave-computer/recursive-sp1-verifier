@@ -5,8 +5,14 @@
 #[cfg(feature = "blake3")]
 mod blake3;
 
+#[cfg(feature = "sha2")]
+mod sha2;
+
 #[cfg(feature = "blake3")]
 pub use blake3::*;
+
+#[cfg(feature = "sha2")]
+pub use sha2::*;
 
 /// The hash output byte-length used in cryptographic primitives like the sparse Merkle tree.
 pub const HASH_LEN: usize = 32;

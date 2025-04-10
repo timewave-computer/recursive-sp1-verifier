@@ -7,8 +7,10 @@ description = "Sparse Merkle tree implementation for the Valence protocol"
 
 [dependencies]
 blake3 = { version = "=1.6.1", optional = true, default-features = false }
+sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", tag = "patch-sha2-0.10.8-sp1-4.0.0", optional = true }
 
 [features]
-default = ["blake3", "std"]
+default = ["sha2", "std"]
 blake3 = ["dep:blake3"]
+sha2 = ["dep:sha2"]
 std = ["blake3?/std"]

@@ -43,6 +43,8 @@ sp1-verifier.workspace = true
 types.workspace = true
 borsh.workspace = true
 normal_bls = { package = "bls12_381", git = "https://github.com/zkcrypto/bls12_381", tag = "0.7.0" }
+valence-coprocessor-core.workspace = true
+valence-smt.workspace = true
 
 [build-dependencies]
 sp1-build = "4.1.7"
