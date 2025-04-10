@@ -20,3 +20,12 @@ pub struct ArkworksGroth16Proof {
     pub public_inputs_serialized: Vec<Vec<u8>>,
     pub ics_input: Vec<Vec<u8>>,
 }
+
+impl ArkworksGroth16Proof {
+    pub fn deserialize_public_inputs(&self) -> Vec<BigUint> {
+        self.public_inputs_serialized
+            .iter()
+            .map(|x| BigUint::from_bytes_be(x))
+            .collect()
+    }
+}
