@@ -4016,6 +4016,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "recursive-arkworks-program"
+version = "0.1.0"
+dependencies = [
+ "borsh",
+ "jonas-groth16",
+ "sp1-zkvm",
+ "types",
+]
+
+[[package]]
 name = "recursive-program"
 version = "0.1.0"
 dependencies = [

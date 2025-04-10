@@ -11,7 +11,7 @@ use sp1_verifier::Groth16Verifier;
 use types::{Sp1Groth16Proof, Sp1Groth16ProofBatch};
 pub const PROVABLE_ELF: &[u8] = include_elf!("provable-program");
 pub const RECURSIVE_ELF: &[u8] = include_elf!("recursive-program");
-
+pub const RECURSIVE_ARKWORKS_ELF: &[u8] = include_elf!("recursive-arkworks-program");
 #[allow(unused)]
 fn prove_provable_program() -> (Vec<u8>, String, Vec<u8>) {
     // generate a groth16 proof
@@ -71,8 +71,10 @@ fn main() {
 mod tests {
     use super::*;
     use sp1_verifier::Groth16Verifier;
-    use std::time::Instant;
-    use types::{Sp1Groth16Proof, Sp1Groth16ProofBatch};
+    use std::{fs, path::Path, time::Instant};
+    use types::{
+        ArkworksGroth16Proof, ArkworksGroth16ProofBatch, Sp1Groth16Proof, Sp1Groth16ProofBatch,
+    };
 
     #[test]
     fn test_wrapper_merkle_proof_single() {
@@ -139,6 +141,42 @@ mod tests {
 
         let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
         // verify final groth16 proof
+        Groth16Verifier::verify(
+            &proof.bytes(),
+            &proof.public_values.to_vec(),
+            &vk.bytes32(),
+            groth16_vk,
+        )
+        .unwrap();
+        let end_time = Instant::now() - start_time;
+        println!("Time taken: {:?}", end_time);
+    }
+
+    #[test]
+    fn test_arkworks_groth16_proof_batch() {
+        let start_time = Instant::now();
+        let crate_root = env!("CARGO_MANIFEST_DIR");
+        let output_path = Path::new(crate_root).join("src/test_data/proof.bin");
+        let mut stdin = SP1Stdin::new();
+        let proof_serialized = fs::read(output_path).unwrap();
+
+        let mut proof_batch: ArkworksGroth16ProofBatch =
+            ArkworksGroth16ProofBatch { proofs: vec![] };
+        // recursively verify 10 proofs of 100 hasehs each
+        for _ in 0..10 {
+            let proof: ArkworksGroth16Proof = borsh::from_slice(&proof_serialized).unwrap();
+            proof_batch.proofs.push(proof);
+        }
+        let circuit_input = borsh::to_vec(&proof_batch).unwrap();
+        stdin.write_vec(circuit_input);
+        let client = ProverClient::new();
+        let (pk, vk) = client.setup(RECURSIVE_ARKWORKS_ELF);
+        let proof = client
+            .prove(&pk, &stdin)
+            .groth16()
+            .run()
+            .expect("failed to generate recursive proof");
+        let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
         Groth16Verifier::verify(
             &proof.bytes(),
             &proof.public_values.to_vec(),

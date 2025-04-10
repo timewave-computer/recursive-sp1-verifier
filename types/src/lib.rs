@@ -14,6 +14,11 @@ pub struct Sp1Groth16ProofBatch {
 }
 
 #[derive(BorshSerialize, BorshDeserialize)]
+pub struct ArkworksGroth16ProofBatch {
+    pub proofs: Vec<ArkworksGroth16Proof>,
+}
+
+#[derive(BorshSerialize, BorshDeserialize)]
 pub struct ArkworksGroth16Proof {
     pub g1_affine_points_serialized: Vec<Vec<u8>>,
     pub g2_affine_points_serialized: Vec<Vec<u8>>,

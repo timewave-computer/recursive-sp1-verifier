@@ -89,3 +89,10 @@ In order to accelerate the co-processor opening proof speed, we're working on a 
 that can leverage the `bls12_381` precompile to verify Arkworks proofs. The goal is to generate a lot of
 merkle opening ZKPs quickly and then wrap them in a single SP1 circuit. We still have to do the heavy lifting 
 in the end, but only once for a batch of arbitrary size.
+
+
+## Run the benchmark
+```shell
+cargo test test_arkworks_groth16_proof_batch --release --features sp1 -- --nocapture
+```
+This test will benchmark 10 recursive proofs of 100 poseidon hashes each.
