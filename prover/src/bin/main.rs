@@ -175,7 +175,6 @@ mod tests {
         }
         let circuit_input = borsh::to_vec(&proof_batch).unwrap();
         stdin.write_vec(circuit_input);
-        //let client = ProverClient::from_env();
         let client = ProverClient::builder().network().build();
 
         let (pk, vk) = client.setup(RECURSIVE_ARKWORKS_ELF);
@@ -228,7 +227,7 @@ mod tests {
 
     #[test]
     fn test_smt_zk_proof_batch() {
-        let proof_count = 100;
+        let proof_count = 254;
         let start_time = Instant::now();
 
         let client = ProverClient::builder().network().build();
@@ -241,11 +240,13 @@ mod tests {
 
         let mut tree = MemorySmt::default();
 
+        let mut inserts = 0;
         let mut root = [0; 32];
         for entry in data.clone() {
+            inserts += 1;
             root = tree.insert(root, context, entry.to_vec()).unwrap();
         }
-
+        assert_eq!(inserts, proof_count);
         let mut proofs = vec![];
         for entry in data {
             proofs.push(tree.get_opening(context, root, &entry).unwrap().unwrap());
@@ -261,6 +262,7 @@ mod tests {
                 context: context.to_string(),
             });
         }
+        assert_eq!(proof_batch.proofs.len(), proof_count);
 
         let proof_batch_serialized = borsh::to_vec(&proof_batch).unwrap();
         stdin.write_vec(proof_batch_serialized);

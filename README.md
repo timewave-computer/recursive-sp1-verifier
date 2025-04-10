@@ -14,6 +14,34 @@ it might be sufficient to verify the coprocessor merkle proofs directly in the S
 Because of this we have an example `simple-merkle-program` that simulates a merkle proof verification in SP1
 using the sha precompile.
 
+# SMT merkle proofs in SP1
+Recursion is overkill unless we aggregate proofs from multiple sources.
+It makes sense for us to directly prove the openings in SP1 or other
+ZKVMs. The different benchmarks in this file clearly show
+how expensive proof wrapping is compared to a unified SP1 groth16
+circuit.
+  
+## SP1 Groth16 circuit (non-recursive, SMT opening batch)
+### Macbook Pro M3 Max, 64 GB Ram
+| Opening Proofs | Time taken |
+|---|---|
+| 50 |  254.2 seconds |
+| 100 | 107.2 seconds | 
+| 254 | 179.6 seconds |
+
+These numbers look unusual at first glance,
+but the distribution lies within the expectations
+for an SMT merkle tree. Multiple inserts
+are necessary for the tree to diverge and for leafs
+to be placed at a lower depth.
+
+### SP1 prover network
+| Opening Proofs | Time taken |
+|---|---|
+| 50 |  77.2 seconds |
+| 100 |  85.3 seconds |
+| 254 |  85.6 seconds | 
+
 # 1. Recursive SP1 Circuit
 
 ## 1.1 Overview
