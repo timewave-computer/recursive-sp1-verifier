@@ -55,10 +55,16 @@ impl ConstraintSynthesizer<FqBLS12_381> for PoseidonDemoCircuitBls12_381 {
 mod tests {
     use super::*;
     use ark_crypto_primitives::crh::{poseidon::CRH, CRHScheme};
+    use ark_ec::scalar_mul;
     use ark_ed_on_bls12_381::Fq as FqBLS12_381;
     use ark_groth16::{r1cs_to_qap::LibsnarkReduction, Groth16};
+    use ark_serialize::CanonicalSerialize;
     use ark_snark::SNARK;
     use ark_std::{rand::rngs::StdRng, rand::SeedableRng};
+    use jonas_groth16::verifier::add_g1_as_coordinates;
+    use jonas_groth16::verifier::extract_g1_coordinates;
+    use jonas_groth16::verifier::negate_g1_affine;
+    use jonas_groth16::verifier::scalar_mul;
     use jonas_groth16::verifier::verify_groth16_proof;
 
     #[test]
@@ -151,21 +157,69 @@ mod tests {
         let vk_delta = vk.delta_g2;
         let ics = vk.gamma_abc_g1;
 
+        let inputs_as_biguint = convert_381_public_inputs_to_biguint(&public_inputs);
+        let mut ics_serialized: Vec<Vec<u8>> = vec![];
+        for point in ics.clone() {
+            let mut buffer = vec![];
+            point.serialize_compressed(&mut buffer).unwrap();
+            ics_serialized.push(buffer);
+        }
+
+        let mut vk_x: G1 = ics[0];
+        for (idx, ic) in ics.into_iter().enumerate().skip(1) {
+            let ic_coords = extract_g1_coordinates(ic);
+            let ic_scalar: G1 =
+                scalar_mul(ic_coords.0, ic_coords.1, inputs_as_biguint[idx - 1].clone());
+            let ic_scalar_coords = extract_g1_coordinates(ic_scalar);
+            let vk_x_as_coordinates = extract_g1_coordinates(vk_x);
+            let vk_x_as_coords = vk_x_as_coordinates.clone();
+            vk_x = add_g1_as_coordinates(
+                vk_x_as_coords.0,
+                vk_x_as_coords.1,
+                ic_scalar_coords.0,
+                ic_scalar_coords.1,
+            );
+        }
+
+        let terms = vec![
+            (negate_g1_affine(pi_a), pi_b),
+            (vk_alpha, vk_beta),
+            (vk_x, vk_gamma),
+            (pi_c, vk_delta),
+        ];
+        let first_point = terms.first().unwrap().0;
+        let mut point_compressed = vec![];
+        first_point
+            .serialize_compressed(&mut point_compressed)
+            .unwrap();
+
+        let mut g1_affine_points_serialized: Vec<Vec<u8>> = vec![];
+        let mut g2_affine_points_serialized: Vec<Vec<u8>> = vec![];
+
+        for point in terms {
+            let mut point_compressed = vec![];
+            point.0.serialize_compressed(&mut point_compressed).unwrap();
+            let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
+            g1_affine_points_serialized.push(point_as_ref.to_vec());
+
+            let mut point_compressed = vec![];
+            point.1.serialize_compressed(&mut point_compressed).unwrap();
+            let point_as_ref: [u8; 96] = point_compressed.try_into().unwrap();
+            g2_affine_points_serialized.push(point_as_ref.to_vec());
+        }
+
         let is_valid = verify_groth16_proof(
-            pi_a,
-            pi_b,
-            pi_c,
-            vk_alpha,
-            vk_beta,
-            vk_gamma,
-            vk_delta,
-            ics,
-            convert_381_public_inputs_to_biguint(&public_inputs),
+            g1_affine_points_serialized,
+            g2_affine_points_serialized,
+            inputs_as_biguint,
+            ics_serialized,
         );
         assert!(is_valid);
     }
+
     use ark_ff::BigInteger;
     use ark_ff::PrimeField;
+    use jonas_groth16::verifier::G1;
     use num_bigint::BigUint;
 
     fn fq381_to_biguint(f: &FqBLS12_381) -> BigUint {
