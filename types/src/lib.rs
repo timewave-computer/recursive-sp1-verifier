@@ -20,8 +20,8 @@ pub struct ArkworksGroth16ProofBatch {
 
 #[derive(BorshSerialize, BorshDeserialize)]
 pub struct ArkworksGroth16Proof {
-    pub g1_affine_points_serialized: Vec<Vec<u8>>,
-    pub g2_affine_points_serialized: Vec<Vec<u8>>,
+    pub g1_affine_points_serialized: Vec<[u8; 48]>,
+    pub g2_affine_points_serialized: Vec<[u8; 96]>,
     pub public_inputs_serialized: Vec<Vec<u8>>,
     pub ics_input: Vec<Vec<u8>>,
 }

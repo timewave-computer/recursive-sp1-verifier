@@ -202,27 +202,56 @@ mod tests {
         for point in terms {
             let mut point_compressed = vec![];
             point.0.serialize_compressed(&mut point_compressed).unwrap();
-            let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
-            g1_affine_points_serialized.push(point_as_ref.to_vec());
+            g1_affine_points_serialized.push(point_compressed);
 
             let mut point_compressed = vec![];
             point.1.serialize_compressed(&mut point_compressed).unwrap();
-            let point_as_ref: [u8; 96] = point_compressed.try_into().unwrap();
-            g2_affine_points_serialized.push(point_as_ref.to_vec());
+            g2_affine_points_serialized.push(point_compressed);
         }
 
         let is_valid = verify_groth16_proof(
-            g1_affine_points_serialized.clone(),
-            g2_affine_points_serialized.clone(),
+            g1_affine_points_serialized
+                .iter()
+                .map(|slice| {
+                    let mut arr = [0u8; 48];
+                    arr.copy_from_slice(slice);
+                    arr
+                })
+                .collect::<Vec<[u8; 48]>>(),
+            g2_affine_points_serialized
+                .iter()
+                .map(|slice| {
+                    let mut arr = [0u8; 96];
+                    arr.copy_from_slice(slice);
+                    arr
+                })
+                .collect::<Vec<[u8; 96]>>(),
             inputs_as_biguint.clone(),
             ics_serialized.clone(),
         );
         assert!(is_valid);
 
         let example_proof_payload = ArkworksGroth16Proof {
-            g1_affine_points_serialized,
-            g2_affine_points_serialized,
-            public_inputs_serialized: inputs_as_biguint.iter().map(|x| x.to_bytes_be()).collect(),
+            g1_affine_points_serialized: g1_affine_points_serialized
+                .iter()
+                .map(|slice| {
+                    let mut arr = [0u8; 48];
+                    arr.copy_from_slice(slice);
+                    arr
+                })
+                .collect::<Vec<[u8; 48]>>(),
+            g2_affine_points_serialized: g2_affine_points_serialized
+                .iter()
+                .map(|slice| {
+                    let mut arr = [0u8; 96];
+                    arr.copy_from_slice(slice);
+                    arr
+                })
+                .collect::<Vec<[u8; 96]>>(),
+            public_inputs_serialized: inputs_as_biguint
+                .iter()
+                .map(|x| x.to_bytes_be())
+                .collect::<Vec<Vec<u8>>>(),
             ics_input: ics_serialized,
         };
 

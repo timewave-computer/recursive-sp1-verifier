@@ -95,4 +95,10 @@ in the end, but only once for a batch of arbitrary size.
 ```shell
 cargo test test_arkworks_groth16_proof_batch --release --features sp1 -- --nocapture
 ```
-This test will benchmark 10 recursive proofs of 100 poseidon hashes each.
+This test will benchmark a batch of recursive arkworks proofs.
+
+The main advantage over using SP1 is that we can quickly generate the groth16 proofs for the openings,
+without having to wrap every single proof with SP1. 
+
+We only wrap the final recursive verification in SP1 => this is the most expensive step that is applied
+to a batch of opening ZKPs.

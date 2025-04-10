@@ -1,20 +1,19 @@
+use crate::BLS12_381_BASE_FIELD_MODULUS as MODULUS;
 pub use ark_bls12_381::G1Affine as G1;
 use ark_bls12_381::{self, Fq, Fr};
+use ark_ec::{AffineRepr, CurveGroup};
+use ark_ff::{BigInteger, PrimeField};
 #[cfg(feature = "normal")]
 use normal_bls::{multi_miller_loop, G1Affine, G2Affine, G2Prepared, Gt};
+use num_bigint::BigUint;
 #[cfg(all(feature = "sp1", not(feature = "normal")))]
 use sp1_bls_precompile::{multi_miller_loop, G1Affine, G2Affine, G2Prepared, Gt};
 use std::str::FromStr;
-//pub type G1 = ark_bls12_381::g1::G1Affine;
-use crate::BLS12_381_BASE_FIELD_MODULUS as MODULUS;
-use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{BigInteger, PrimeField};
-use num_bigint::BigUint;
 
 #[allow(clippy::too_many_arguments)]
 pub fn verify_groth16_proof(
-    g1_affine_points_serialized: Vec<Vec<u8>>,
-    g2_affine_points_serialized: Vec<Vec<u8>>,
+    g1_affine_points_serialized: Vec<[u8; 48]>,
+    g2_affine_points_serialized: Vec<[u8; 96]>,
     public_inputs: Vec<BigUint>,
     ics_serialized: Vec<Vec<u8>>,
 ) -> bool {
@@ -22,13 +21,12 @@ pub fn verify_groth16_proof(
     let mut g2_affine_points: Vec<G2Prepared> = vec![];
 
     for point in g1_affine_points_serialized {
-        g1_affine_points
-            .push(G1Affine::from_compressed_unchecked(&point.try_into().unwrap()).unwrap());
+        g1_affine_points.push(G1Affine::from_compressed_unchecked(&point).unwrap());
     }
 
     for point in g2_affine_points_serialized {
         g2_affine_points.push(G2Prepared::from(
-            G2Affine::from_compressed_unchecked(&point.try_into().unwrap()).unwrap(),
+            G2Affine::from_compressed_unchecked(&point).unwrap(),
         ));
     }
 
@@ -37,9 +35,11 @@ pub fn verify_groth16_proof(
         .zip(g2_affine_points.iter())
         .collect();
 
-    /*let miller_result = multi_miller_loop(&pairing_inputs);
-    miller_result.final_exponentiation() == Gt::identity()*/
-    true
+    let miller_result = multi_miller_loop(&pairing_inputs);
+    miller_result.final_exponentiation() == Gt::identity()
+
+    // todo: constrain vk_x => this is important to verify the public inputs
+    // might have to fork the bls precompile for that, work in progress.
 }
 
 pub fn add_g1_as_coordinates(p_x: BigUint, p_y: BigUint, q_x: BigUint, q_y: BigUint) -> G1 {
