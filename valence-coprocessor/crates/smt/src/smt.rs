@@ -1,6 +1,7 @@
 use core::marker::PhantomData;
 
 use alloc::vec::Vec;
+use borsh::{BorshDeserialize, BorshSerialize};
 use valence_coprocessor_core::{ExecutionContext, Hash, Hasher, HASH_LEN};
 use zerocopy::IntoBytes as _;
 
@@ -110,7 +111,9 @@ impl AsRef<[u8]> for SmtChildren {
 }
 
 /// A postorder traversal Merkle opening proof that opens the data to a Merkle root.
-#[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Debug, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, BorshSerialize, BorshDeserialize,
+)]
 pub struct SmtOpening {
     /// Preimage of the leaf hash
     pub data: Vec<u8>,
