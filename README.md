@@ -61,6 +61,13 @@ $ sp1up --version 4.1.7
 | 1 | 10 | 823.10s | test_wrapper_merkle_proof |
 | 10 | 10 |  | test_wrapper_merkle_proof_batch |
 
+Note that in this benchmark we not only measured the time it took to generate the recursive proof,
+but also the time it took to generate the initial wrapped proof in SP1. Therefore this is a very
+inefficient scenario where the proving time grows much larger than with Arkworks for each additional
+proof.
+
+Don't worry about these disappointing numbers, just scroll down to see our Arkworks results ;).
+
 ## 5. Run the Basic Benchmarks Yourself
 
 Single merkle proof with 10 hashes:
@@ -102,3 +109,18 @@ without having to wrap every single proof with SP1.
 
 We only wrap the final recursive verification in SP1 => this is the most expensive step that is applied
 to a batch of opening ZKPs.
+
+# 2.1 Arkworks Recursive Benchmark results
+
+### SP1 prover network
+
+2 recursive arkworks proofs took 64 seconds,
+10 recursive arkworks proofs took 123 seconds,
+50 recursive arkworks proofs took 292 seconds.
+
+| Recursive Proofs | Time taken |
+|---|---|
+| 2 | 64 seconds |
+| 10 | 123 seconds |
+| 50 | 292 seconds |
+| 100 | 479 seconds | 

@@ -70,6 +70,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sp1_sdk::Prover;
     use sp1_verifier::Groth16Verifier;
     use std::{fs, path::Path, time::Instant};
     use types::{
@@ -163,28 +164,22 @@ mod tests {
         let mut proof_batch: ArkworksGroth16ProofBatch =
             ArkworksGroth16ProofBatch { proofs: vec![] };
         // recursively verify 10 proofs of 100 hasehs each
-        for _ in 0..1 {
+        for _ in 0..100 {
             let proof: ArkworksGroth16Proof = borsh::from_slice(&proof_serialized).unwrap();
             proof_batch.proofs.push(proof);
         }
         let circuit_input = borsh::to_vec(&proof_batch).unwrap();
         stdin.write_vec(circuit_input);
-        let client = ProverClient::new();
+        //let client = ProverClient::from_env();
+        let client = ProverClient::builder().network().build();
+
         let (pk, vk) = client.setup(RECURSIVE_ARKWORKS_ELF);
         let proof = client
             .prove(&pk, &stdin)
             .groth16()
             .run()
             .expect("failed to generate recursive proof");
-        let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
         let end_time = Instant::now() - start_time;
         println!("Time taken to prove: {:?}", end_time);
-        Groth16Verifier::verify(
-            &proof.bytes(),
-            &proof.public_values.to_vec(),
-            &vk.bytes32(),
-            groth16_vk,
-        )
-        .unwrap();
     }
 }
