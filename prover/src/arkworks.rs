@@ -53,6 +53,9 @@ impl ConstraintSynthesizer<FqBLS12_381> for PoseidonDemoCircuitBls12_381 {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+    use std::path::Path;
+
     use super::*;
     use ark_crypto_primitives::crh::{poseidon::CRH, CRHScheme};
     use ark_ec::scalar_mul;
@@ -209,18 +212,31 @@ mod tests {
         }
 
         let is_valid = verify_groth16_proof(
-            g1_affine_points_serialized,
-            g2_affine_points_serialized,
-            inputs_as_biguint,
-            ics_serialized,
+            g1_affine_points_serialized.clone(),
+            g2_affine_points_serialized.clone(),
+            inputs_as_biguint.clone(),
+            ics_serialized.clone(),
         );
         assert!(is_valid);
+
+        let example_proof_payload = ArkworksGroth16Proof {
+            g1_affine_points_serialized,
+            g2_affine_points_serialized,
+            public_inputs_serialized: inputs_as_biguint.iter().map(|x| x.to_bytes_be()).collect(),
+            ics_input: ics_serialized,
+        };
+
+        let crate_root = env!("CARGO_MANIFEST_DIR");
+        let output_path = Path::new(crate_root).join("src/test_data/proof.bin");
+
+        fs::write(output_path, borsh::to_vec(&example_proof_payload).unwrap()).unwrap();
     }
 
     use ark_ff::BigInteger;
     use ark_ff::PrimeField;
     use jonas_groth16::verifier::G1;
     use num_bigint::BigUint;
+    use types::ArkworksGroth16Proof;
 
     fn fq381_to_biguint(f: &FqBLS12_381) -> BigUint {
         let ark_bigint = f.into_bigint();
