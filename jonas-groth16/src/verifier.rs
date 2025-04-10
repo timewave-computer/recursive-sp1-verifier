@@ -118,35 +118,3 @@ pub fn negate_g1_affine(p: G1) -> G1 {
         G1::new_unchecked(x_fq, Fq::from(neg_y_coord))
     }
 }
-
-macro_rules! generate_integer_conditional_select {
-    ($($t:tt)*) => ($(
-        impl ConditionallySelectable for $t {
-            #[inline]
-            fn conditional_select(a: &Self, b: &Self, choice: Choice) -> Self {
-                // if choice = 0, mask = (-0) = 0000...0000
-                // if choice = 1, mask = (-1) = 1111...1111
-                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
-                a ^ (mask & (a ^ b))
-            }
-
-            #[inline]
-            fn conditional_assign(&mut self, other: &Self, choice: Choice) {
-                // if choice = 0, mask = (-0) = 0000...0000
-                // if choice = 1, mask = (-1) = 1111...1111
-                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
-                *self ^= mask & (*self ^ *other);
-            }
-
-            #[inline]
-            fn conditional_swap(a: &mut Self, b: &mut Self, choice: Choice) {
-                // if choice = 0, mask = (-0) = 0000...0000
-                // if choice = 1, mask = (-1) = 1111...1111
-                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
-                let t = mask & (*a ^ *b);
-                *a ^= t;
-                *b ^= t;
-            }
-         }
-    )*)
-}
