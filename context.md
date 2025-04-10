@@ -45,6 +45,13 @@ The coprocessor receives Merkle proofs and performs the following:
   - Maintains an on-chain **Sparse Merkle Tree (SMT)** that stores the *latest finalized* trusted state root for each domain
   - This SMT is updated via light clients or proof-based SMT updates
 
+For the MVP we will want to settle with a prover that is reasonably fast, but not necessarily perfectly optimized.
+Recursive Groth16 is a real challenge that we want to solve. As an initial solution, this repository contains
+a recursive Arkworks verifier in SP1, enabling fast opening proofs but still demanding an expensive batching
+operation. We verify all Groth16 proofs that were generated using the Arkworks opening circuit inside a single 
+SP1 program, effectively batching them into a single Groth16 proof that can be verified on-chain.
+We are actively looking for optimizations and ways to improve this proving scheme.
+
 The SMT allows:
 - Storing and retrieving the latest root for a given chain
 - Verifying that each batched proof is valid against the known state
