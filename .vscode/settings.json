@@ -15,6 +15,10 @@
         "-A",
         "incomplete-features"
     ],
+    "rust-analyzer.cargo.features": [
+        "sp1"
+    ],
+    "rust-analyzer.cargo.noDefaultFeatures": true,
     "rust-analyzer.runnables.extraEnv": {
         "RUST_LOG": "debug",
         "RUSTFLAGS": "-Ctarget-cpu=native"

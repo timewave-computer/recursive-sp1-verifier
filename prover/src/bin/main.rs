@@ -177,6 +177,8 @@ mod tests {
             .run()
             .expect("failed to generate recursive proof");
         let groth16_vk = *sp1_verifier::GROTH16_VK_BYTES;
+        let end_time = Instant::now() - start_time;
+        println!("Time taken to prove: {:?}", end_time);
         Groth16Verifier::verify(
             &proof.bytes(),
             &proof.public_values.to_vec(),
@@ -184,7 +186,5 @@ mod tests {
             groth16_vk,
         )
         .unwrap();
-        let end_time = Instant::now() - start_time;
-        println!("Time taken: {:?}", end_time);
     }
 }
