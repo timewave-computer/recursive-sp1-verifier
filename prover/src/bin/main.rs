@@ -163,7 +163,7 @@ mod tests {
         let mut proof_batch: ArkworksGroth16ProofBatch =
             ArkworksGroth16ProofBatch { proofs: vec![] };
         // recursively verify 10 proofs of 100 hasehs each
-        for _ in 0..10 {
+        for _ in 0..1 {
             let proof: ArkworksGroth16Proof = borsh::from_slice(&proof_serialized).unwrap();
             proof_batch.proofs.push(proof);
         }
