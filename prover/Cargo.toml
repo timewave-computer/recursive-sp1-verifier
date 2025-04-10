@@ -28,7 +28,7 @@ ark-ed-on-bls12-381 = "0.5"
 num-bigint = "0.4.6"
 
 # experimental verifier
-jonas-groth16 = { path = "../jonas-groth16", features = ["bls12_381"] }
+jonas-groth16.workspace = true
 
 # sp1
 sp1-sdk = { version = "4.1.7", features = ["native-gnark"] }

@@ -11,11 +11,8 @@ serde = "1"
 bn = { version = "0.5", package = "zeropool-bn", default-features = false }
 num-traits = "0.2"
 
-ark-bn254 = { version = "0.5", optional = true }
-ark-bls12-381 = { version = "0.5", optional = true }
+ark-bls12-381 = { version = "0.5" }
 ark-serialize = "0.5"
 normal_bls = { package = "bls12_381", git = "https://github.com/zkcrypto/bls12_381", tag = "0.7.0" }
 
 [features]
-bn254 = ["ark-bn254"]
-bls12_381 = ["ark-bls12-381"]

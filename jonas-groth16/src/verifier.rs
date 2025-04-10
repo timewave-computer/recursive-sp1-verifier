@@ -1,28 +1,14 @@
 use std::str::FromStr;
 
 // todo: implement bls12_381
-#[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
-use ark_bls12_381::{self, Config, Fq, Fr, G1Affine, G2Affine};
+use ark_bls12_381::{self, Fq, Fr, G1Affine, G2Affine};
 use normal_bls::{multi_miller_loop, G2Prepared, Gt};
-#[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
 pub type G1 = ark_bls12_381::g1::G1Affine;
-#[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
 use crate::BLS12_381_BASE_FIELD_MODULUS as MODULUS;
-#[cfg(feature = "bn254")]
-use ark_bn254::{self, Config, Fq, Fr, G1Affine, G2Affine};
-#[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
-use ark_ec::{bls12::Bls12 as Model, pairing::Pairing, AffineRepr, CurveGroup};
-#[cfg(feature = "bn254")]
-use ark_ec::{models::bn::Bn as Model, pairing::Pairing, AffineRepr, CurveGroup};
-use ark_ff::{BigInteger, PrimeField, Zero};
+use ark_ec::{AffineRepr, CurveGroup};
+use ark_ff::{BigInteger, PrimeField};
 use ark_serialize::CanonicalSerialize;
 use num_bigint::BigUint;
-
-#[cfg(feature = "bn254")]
-use crate::BN254_BASE_FIELD_MODULUS as MODULUS;
-
-#[cfg(feature = "bn254")]
-pub type G1 = ark_bn254::g1::G1Affine;
 
 pub fn parse_biguint_to_fq(value: &str) -> Fq {
     let big_int = BigUint::parse_bytes(value.as_bytes(), 10).unwrap();
@@ -86,7 +72,6 @@ pub fn verify_groth16_proof(
     first_point
         .serialize_compressed(&mut point_compressed)
         .unwrap();
-    let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
 
     let mut g1_affine_points: Vec<G1Affine> = vec![];
     let mut g2_affine_points: Vec<G2Prepared> = vec![];
