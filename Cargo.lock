@@ -4643,6 +4643,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "simple-merkle-proofs"
+version = "0.1.0"
+dependencies = [
+ "borsh",
+ "sha2",
+ "sp1-verifier",
+ "sp1-zkvm",
+ "types",
+]
+
+[[package]]
 name = "size"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

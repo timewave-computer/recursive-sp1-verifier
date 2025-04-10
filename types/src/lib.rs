@@ -34,3 +34,9 @@ impl ArkworksGroth16Proof {
             .collect()
     }
 }
+
+pub type MockNode = Vec<u8>;
+#[derive(BorshSerialize, BorshDeserialize)]
+pub struct MockMerkleProofBatch {
+    pub proofs: Vec<Vec<MockNode>>,
+}

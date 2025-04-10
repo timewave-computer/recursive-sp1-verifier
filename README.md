@@ -8,6 +8,12 @@
 
 [![Learn More About Valence ZK](https://img.shields.io/badge/_Learn_More_About_Valence_ZK-2EA44F?style=for-the-badge&logo=github&logoColor=white)](context.md)
 
+# 0. Non-recursive merkle proofs
+Instead of adding overhead by recursively verifying proofs from a different (or the same) proving system,
+it might be sufficient to verify the coprocessor merkle proofs directly in the SP1 program.
+Because of this we have an example `simple-merkle-program` that simulates a merkle proof verification in SP1
+using the sha precompile.
+
 # 1. Recursive SP1 Circuit
 
 ## 1.1 Overview

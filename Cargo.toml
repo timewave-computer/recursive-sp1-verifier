@@ -4,6 +4,7 @@ members = [
     "prover",
     "recursive-program",
     "recursive-arkworks-program",
+    "simple-merkle-proofs",
     "types",
     "jonas-groth16",
 ]

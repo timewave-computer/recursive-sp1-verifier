@@ -12,6 +12,7 @@ use types::{Sp1Groth16Proof, Sp1Groth16ProofBatch};
 pub const PROVABLE_ELF: &[u8] = include_elf!("provable-program");
 pub const RECURSIVE_ELF: &[u8] = include_elf!("recursive-program");
 pub const RECURSIVE_ARKWORKS_ELF: &[u8] = include_elf!("recursive-arkworks-program");
+pub const SIMPLE_MERKLE_PROOF_ELF: &[u8] = include_elf!("simple-merkle-proofs");
 #[allow(unused)]
 fn prove_provable_program() -> (Vec<u8>, String, Vec<u8>) {
     // generate a groth16 proof
@@ -74,7 +75,8 @@ mod tests {
     use sp1_verifier::Groth16Verifier;
     use std::{fs, path::Path, time::Instant};
     use types::{
-        ArkworksGroth16Proof, ArkworksGroth16ProofBatch, Sp1Groth16Proof, Sp1Groth16ProofBatch,
+        ArkworksGroth16Proof, ArkworksGroth16ProofBatch, MockMerkleProofBatch, Sp1Groth16Proof,
+        Sp1Groth16ProofBatch,
     };
 
     #[test]
@@ -181,5 +183,43 @@ mod tests {
             .expect("failed to generate recursive proof");
         let end_time = Instant::now() - start_time;
         println!("Time taken to prove: {:?}", end_time);
+    }
+
+    #[test]
+    fn test_simple_merkle_proof_batch() {
+        let start_time = Instant::now();
+        let client = ProverClient::new();
+        let mut stdin = SP1Stdin::new();
+        let mut input = MockMerkleProofBatch { proofs: vec![] };
+        for _ in 0..100 {
+            input.proofs.push(vec![
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+                vec![7, 8, 9],
+                vec![10, 11, 12],
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+                vec![7, 8, 9],
+                vec![10, 11, 12],
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+                vec![7, 8, 9],
+                vec![10, 11, 12],
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+                vec![7, 8, 9],
+                vec![10, 11, 12],
+            ]);
+        }
+        stdin.write_vec(borsh::to_vec(&input).unwrap());
+        let (pk, vk) = client.setup(SIMPLE_MERKLE_PROOF_ELF);
+        let proof = client
+            .prove(&pk, &stdin)
+            .groth16()
+            .run()
+            .expect("failed to generate provable_program proof");
+
+        let end_time = Instant::now() - start_time;
+        println!("Time taken: {:?}", end_time);
     }
 }

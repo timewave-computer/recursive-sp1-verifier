@@ -1,0 +1,11 @@
+[package]
+version = "0.1.0"
+name = "simple-merkle-proofs"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm.workspace = true
+sp1-verifier.workspace = true
+borsh.workspace = true
+types.workspace = true
+sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", tag = "patch-sha2-0.10.8-sp1-4.0.0" }
