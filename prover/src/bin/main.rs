@@ -229,7 +229,7 @@ mod tests {
     #[test]
     fn test_smt_zk_proof_batch() {
         let start_time = Instant::now();
-        let client = ProverClient::new();
+        let client = ProverClient::builder().network().build();
         let mut stdin = SP1Stdin::new();
         let context = "poem";
 
