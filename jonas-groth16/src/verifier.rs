@@ -3,6 +3,7 @@ use std::str::FromStr;
 // todo: implement bls12_381
 #[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
 use ark_bls12_381::{self, Config, Fq, Fr, G1Affine, G2Affine};
+use normal_bls::{multi_miller_loop, G2Prepared, Gt};
 #[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
 pub type G1 = ark_bls12_381::g1::G1Affine;
 #[cfg(all(feature = "bls12_381", not(feature = "bn254")))]
@@ -62,7 +63,6 @@ pub fn verify_groth16_proof(
     for (idx, ic) in ics.into_iter().enumerate().skip(1) {
         let ic_coords = extract_g1_coordinates(ic);
         let ic_scalar: G1 = scalar_mul(ic_coords.0, ic_coords.1, inputs[idx - 1].clone());
-        println!("processed input: {}, with ic: {}", inputs[idx - 1], idx);
         let ic_scalar_coords = extract_g1_coordinates(ic_scalar);
         let vk_x_as_coordinates = extract_g1_coordinates(vk_x);
         let vk_x_as_coords = vk_x_as_coordinates.clone();
@@ -80,22 +80,38 @@ pub fn verify_groth16_proof(
         (vk_x, vk_gamma2),
         (pi_c, vk_delta2),
     ];
-    use normal_bls::{G1Affine, G2Affine, G2Projective};
+    use normal_bls::{G1Affine, G2Affine};
     let first_point = terms.first().unwrap().0;
     let mut point_compressed = vec![];
     first_point
         .serialize_compressed(&mut point_compressed)
         .unwrap();
     let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
-    let pi_a_inverse = G1Affine::from_compressed(&point_as_ref).unwrap();
-    // todo: wrap all other points in standard_bls form and use the precompile in SP1
 
-    // compute pairing result and return is_zero?
-    <Model<Config> as Pairing>::multi_pairing(
-        vec![negate_g1_affine(pi_a), vk_alpha1, vk_x, pi_c],
-        vec![pi_b, vk_beta2, vk_gamma2, vk_delta2],
-    )
-    .is_zero()
+    let mut g1_affine_points: Vec<G1Affine> = vec![];
+    let mut g2_affine_points: Vec<G2Prepared> = vec![];
+
+    for point in terms {
+        let mut point_compressed = vec![];
+        point.0.serialize_compressed(&mut point_compressed).unwrap();
+        let point_as_ref: [u8; 48] = point_compressed.try_into().unwrap();
+        g1_affine_points.push(G1Affine::from_compressed(&point_as_ref).unwrap());
+
+        let mut point_compressed = vec![];
+        point.1.serialize_compressed(&mut point_compressed).unwrap();
+        let point_as_ref: [u8; 96] = point_compressed.try_into().unwrap();
+        g2_affine_points.push(G2Prepared::from(
+            G2Affine::from_compressed(&point_as_ref).unwrap(),
+        ));
+    }
+
+    let pairing_inputs: Vec<_> = g1_affine_points
+        .iter()
+        .zip(g2_affine_points.iter())
+        .collect();
+
+    let miller_result = multi_miller_loop(&pairing_inputs);
+    miller_result.final_exponentiation() == Gt::identity()
 }
 
 pub fn add_g1_as_coordinates(p_x: BigUint, p_y: BigUint, q_x: BigUint, q_y: BigUint) -> G1 {

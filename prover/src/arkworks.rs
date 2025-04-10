@@ -132,10 +132,6 @@ mod tests {
 
         // The public input is the hash value
         let public_inputs = vec![final_hash];
-        println!(
-            "Public input (hash after 100 iterations): {:?}",
-            public_inputs[0]
-        );
 
         // Verify the proof
         let is_valid = Groth16::<ark_bls12_381::Bls12_381, LibsnarkReduction>::verify(
