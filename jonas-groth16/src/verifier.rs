@@ -3,6 +3,7 @@ pub use ark_bls12_381::G1Affine as G1;
 use ark_bls12_381::{self, Fq, Fr};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{BigInteger, PrimeField};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 #[cfg(feature = "normal")]
 use normal_bls::{multi_miller_loop, G1Affine, G2Affine, G2Prepared, Gt};
 use num_bigint::BigUint;
@@ -19,6 +20,31 @@ pub fn verify_groth16_proof(
 ) -> bool {
     let mut g1_affine_points: Vec<G1Affine> = vec![];
     let mut g2_affine_points: Vec<G2Prepared> = vec![];
+
+    let mut ics: Vec<G1> = vec![];
+    for point in ics_serialized {
+        ics.push(G1::deserialize_compressed_unchecked::<&[u8]>(&point).unwrap());
+    }
+    let mut vk_x: G1 = ics[0];
+    for (idx, ic) in ics.into_iter().enumerate().skip(1) {
+        let ic_coords = extract_g1_coordinates(ic);
+        let ic_scalar: G1 = scalar_mul(ic_coords.0, ic_coords.1, public_inputs[idx - 1].clone());
+        let ic_scalar_coords = extract_g1_coordinates(ic_scalar);
+        let vk_x_as_coordinates = extract_g1_coordinates(vk_x);
+        let vk_x_as_coords = vk_x_as_coordinates.clone();
+        vk_x = add_g1_as_coordinates(
+            vk_x_as_coords.0,
+            vk_x_as_coords.1,
+            ic_scalar_coords.0,
+            ic_scalar_coords.1,
+        );
+    }
+    let mut vk_x_buffer = vec![];
+    vk_x.serialize_compressed(&mut vk_x_buffer).unwrap();
+    assert_eq!(
+        G1Affine::from_compressed_unchecked(&vk_x_buffer.try_into().unwrap()).unwrap(),
+        *g1_affine_points.get(2).unwrap()
+    );
 
     for point in g1_affine_points_serialized {
         g1_affine_points.push(G1Affine::from_compressed_unchecked(&point).unwrap());
@@ -91,4 +117,36 @@ pub fn negate_g1_affine(p: G1) -> G1 {
             (base_field_modulus_biguint.clone() - y_coord) % base_field_modulus_biguint;
         G1::new_unchecked(x_fq, Fq::from(neg_y_coord))
     }
+}
+
+macro_rules! generate_integer_conditional_select {
+    ($($t:tt)*) => ($(
+        impl ConditionallySelectable for $t {
+            #[inline]
+            fn conditional_select(a: &Self, b: &Self, choice: Choice) -> Self {
+                // if choice = 0, mask = (-0) = 0000...0000
+                // if choice = 1, mask = (-1) = 1111...1111
+                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
+                a ^ (mask & (a ^ b))
+            }
+
+            #[inline]
+            fn conditional_assign(&mut self, other: &Self, choice: Choice) {
+                // if choice = 0, mask = (-0) = 0000...0000
+                // if choice = 1, mask = (-1) = 1111...1111
+                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
+                *self ^= mask & (*self ^ *other);
+            }
+
+            #[inline]
+            fn conditional_swap(a: &mut Self, b: &mut Self, choice: Choice) {
+                // if choice = 0, mask = (-0) = 0000...0000
+                // if choice = 1, mask = (-1) = 1111...1111
+                let mask = -(choice.unwrap_u8() as to_signed_int!($t)) as $t;
+                let t = mask & (*a ^ *b);
+                *a ^= t;
+                *b ^= t;
+            }
+         }
+    )*)
 }
