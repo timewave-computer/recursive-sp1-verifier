@@ -114,10 +114,6 @@ to a batch of opening ZKPs.
 
 ### SP1 prover network
 
-2 recursive arkworks proofs took 64 seconds,
-10 recursive arkworks proofs took 123 seconds,
-50 recursive arkworks proofs took 292 seconds.
-
 | Recursive Proofs | Time taken |
 |---|---|
 | 2 | 64 seconds |
