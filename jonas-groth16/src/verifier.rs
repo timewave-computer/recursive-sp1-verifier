@@ -21,6 +21,16 @@ pub fn verify_groth16_proof(
     let mut g1_affine_points: Vec<G1Affine> = vec![];
     let mut g2_affine_points: Vec<G2Prepared> = vec![];
 
+    for point in g1_affine_points_serialized {
+        g1_affine_points.push(G1Affine::from_compressed_unchecked(&point).unwrap());
+    }
+
+    for point in g2_affine_points_serialized {
+        g2_affine_points.push(G2Prepared::from(
+            G2Affine::from_compressed_unchecked(&point).unwrap(),
+        ));
+    }
+
     let mut ics: Vec<G1> = vec![];
     for point in ics_serialized {
         ics.push(G1::deserialize_compressed_unchecked::<&[u8]>(&point).unwrap());
@@ -45,16 +55,6 @@ pub fn verify_groth16_proof(
         G1Affine::from_compressed_unchecked(&vk_x_buffer.try_into().unwrap()).unwrap(),
         *g1_affine_points.get(2).unwrap()
     );
-
-    for point in g1_affine_points_serialized {
-        g1_affine_points.push(G1Affine::from_compressed_unchecked(&point).unwrap());
-    }
-
-    for point in g2_affine_points_serialized {
-        g2_affine_points.push(G2Prepared::from(
-            G2Affine::from_compressed_unchecked(&point).unwrap(),
-        ));
-    }
 
     let pairing_inputs: Vec<_> = g1_affine_points
         .iter()
