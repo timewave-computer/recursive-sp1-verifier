@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 // todo: implement bls12_381
-use ark_bls12_381::{self, Fq, Fr, G1Affine, G2Affine};
+use ark_bls12_381::{self, Fq, Fr, G1Affine};
 #[cfg(feature = "normal")]
 use normal_bls::{multi_miller_loop, G2Prepared, Gt};
 #[cfg(all(feature = "sp1", not(feature = "normal")))]
@@ -50,7 +50,7 @@ pub fn verify_groth16_proof(
 
     let mut ics: Vec<G1> = vec![];
     for ic in ics_input {
-        ics.push(G1::deserialize_compressed::<&[u8]>(&ic).unwrap());
+        ics.push(G1::deserialize_compressed_unchecked::<&[u8]>(&ic).unwrap());
     }
 
     let mut vk_x: G1 = ics[0];
@@ -70,18 +70,19 @@ pub fn verify_groth16_proof(
 
     let mut vk_x_buffer = vec![];
     vk_x.serialize_compressed(&mut vk_x_buffer).unwrap();
-    let vk_x = G1Affine::from_compressed(&vk_x_buffer.try_into().unwrap()).unwrap();
+    let vk_x = G1Affine::from_compressed_unchecked(&vk_x_buffer.try_into().unwrap()).unwrap();
 
     let mut g1_affine_points: Vec<G1Affine> = vec![];
     let mut g2_affine_points: Vec<G2Prepared> = vec![];
 
     for point in g1_affine_points_serialized {
-        g1_affine_points.push(G1Affine::from_compressed(&point.try_into().unwrap()).unwrap());
+        g1_affine_points
+            .push(G1Affine::from_compressed_unchecked(&point.try_into().unwrap()).unwrap());
     }
 
     for point in g2_affine_points_serialized {
         g2_affine_points.push(G2Prepared::from(
-            G2Affine::from_compressed(&point.try_into().unwrap()).unwrap(),
+            G2Affine::from_compressed_unchecked(&point.try_into().unwrap()).unwrap(),
         ));
     }
 
