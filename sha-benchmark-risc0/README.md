@@ -1,0 +1,1 @@
+# Risc0 benchmark using sha2 precompile

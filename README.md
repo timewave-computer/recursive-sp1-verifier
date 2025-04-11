@@ -48,6 +48,26 @@ To run these benchmarks yourself:
 cargo test test_smt_zk_proof_batch --release -- --nocapture
 ```
 
+# SHA2 benchmark in Risc0 vs SP1
+## Run in Risc0
+```shell
+cd sha-benchmark-risc0
+cargo test test_smt_zk_proof_batch --release -- --nocapture
+```
+
+## Run in SP1
+```shell
+cargo test test_smt_zk_proof_batch --release -- --nocapture
+```
+
+Check `Cargo.toml` in the respective workspaces to make sure the precompile takes effect.
+The `sha-benchmark-risc0` is a seperate workspace and the SP1 workspace is the one configured 
+at the root level.
+
+Click [here](Cargo.toml) to view the `Cargo.toml` of the SP1 workspace.
+
+Click [here](sha-benchmark-risc0/Cargo.toml) to view the `Cargo.toml` of the Risc0 workspace
+
 # 1. Recursive SP1 Circuit
 
 ## 1.1 Overview

@@ -19,6 +19,6 @@ tempfile = "=3.19.1"
 
 [features]
 default = ["memory", "std"]
-std = ["anyhow/std", "valence-coprocessor-core/std", "zerocopy/std"]
+std = ["anyhow/std", "zerocopy/std"]
 memory = ["valence-coprocessor-core/blake3"]
 rocksdb = ["dep:rocksdb", "std"]

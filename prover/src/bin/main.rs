@@ -79,8 +79,7 @@ mod tests {
         ArkworksGroth16Proof, ArkworksGroth16ProofBatch, MockMerkleProofBatch, SmtOpeningBatch,
         SmtOpeningInput, Sp1Groth16Proof, Sp1Groth16ProofBatch,
     };
-    use valence_coprocessor_core::{Hasher, Sha2HasherSp1};
-    use valence_smt::{MemorySmt, SmtOpening};
+    use valence_smt::MemorySmt;
 
     #[test]
     fn test_wrapper_merkle_proof_single() {
@@ -230,7 +229,7 @@ mod tests {
         let proof_count = 254;
         let start_time = Instant::now();
 
-        let client = ProverClient::builder().network().build();
+        let client = ProverClient::new();
         let mut stdin = SP1Stdin::new();
         let context = "poem";
         let mut data: Vec<[u8; 3]> = vec![[0x00, 0x00, 0x00]];
