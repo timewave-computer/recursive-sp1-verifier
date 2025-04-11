@@ -68,6 +68,19 @@ Click [here](Cargo.toml) to view the `Cargo.toml` of the SP1 workspace.
 
 Click [here](sha-benchmark-risc0/Cargo.toml) to view the `Cargo.toml` of the Risc0 workspace
 
+## SHA2 Benchmark results using the SMT
+Note that I was not able to wrap the Risc0 proof in Groth16 because ARM64 is unsupported.
+Therefore we compare the UNWRAPPED Risc0 proof to the Groth16 WRAPPED SP1 proof.
+Even though this test is IN FAVOR of Risc0, SP1 produced much better results:
+
+| Prover | Merkle Openings | Time |
+|---|---|---|
+| SP1 Wrapped | 254 | 179 seconds |
+| Risc0 Unwrapped | 254 | 700+ seconds |
+
+>[!NOTE]
+> Hardware Acceleration was not used in either of these benchmarks!
+
 # 1. Recursive SP1 Circuit
 
 ## 1.1 Overview
