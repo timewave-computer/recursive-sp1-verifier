@@ -1180,7 +1180,7 @@ dependencies = [
  "group 0.13.0",
  "pairing 0.23.0",
  "rand_core 0.6.4",
- "sp1-lib",
+ "sp1-lib 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "subtle",
 ]
 
@@ -1344,9 +1344,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.18"
+version = "1.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "525046617d8376e3db1deffb079e91cef90a89fc3ca5c185bbf8c9ecdd15cd5c"
+checksum = "8e3a13707ac958681c13b39b458c073d0d9bc8a22cb1b2f4c8e55eb72c13f362"
 dependencies = [
  "jobserver",
  "libc",
@@ -3937,7 +3937,7 @@ dependencies = [
  "num-bigint 0.4.6",
  "serde",
  "serde_json",
- "sp1-build",
+ "sp1-build 4.1.7 (git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall)",
  "sp1-sdk",
  "sp1-verifier",
  "tracing",
@@ -4427,9 +4427,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.25"
+version = "0.23.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "822ee9188ac4ec04a2f0531e55d035fb2de73f18b41a63c70c2712503b6fb13c"
+checksum = "df51b5869f3a441595eac5e8ff14d486ff285f7b8c0df8770e49c3b56351f0f0"
 dependencies = [
  "log",
  "once_cell",
@@ -4856,6 +4856,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp1-build"
+version = "4.1.7"
+source = "git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall#2ce184336547c2be344969200b718547d8c5686e"
+dependencies = [
+ "anyhow",
+ "cargo_metadata",
+ "chrono",
+ "clap",
+ "dirs",
+]
+
+[[package]]
 name = "sp1-core-executor"
 version = "4.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4882,7 +4894,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sp1-curves",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-stark",
  "strum",
  "strum_macros",
@@ -4936,7 +4948,7 @@ dependencies = [
  "sp1-core-executor",
  "sp1-curves",
  "sp1-derive",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-stark",
  "static_assertions",
  "strum",
@@ -4984,7 +4996,7 @@ dependencies = [
  "p3-field",
  "serde",
  "snowbridge-amcl",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-stark",
  "typenum",
 ]
@@ -5008,7 +5020,17 @@ dependencies = [
  "bincode",
  "elliptic-curve",
  "serde",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "sp1-lib"
+version = "4.1.7"
+source = "git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall#2ce184336547c2be344969200b718547d8c5686e"
+dependencies = [
+ "bincode",
+ "serde",
+ "sp1-primitives 4.1.7 (git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall)",
 ]
 
 [[package]]
@@ -5016,6 +5038,23 @@ name = "sp1-primitives"
 version = "4.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7939f86891aa5995fa863abf296645a5ad4611d9598a8101389f85c624d41043"
+dependencies = [
+ "bincode",
+ "hex",
+ "lazy_static",
+ "num-bigint 0.4.6",
+ "p3-baby-bear",
+ "p3-field",
+ "p3-poseidon2",
+ "p3-symmetric",
+ "serde",
+ "sha2",
+]
+
+[[package]]
+name = "sp1-primitives"
+version = "4.1.7"
+source = "git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall#2ce184336547c2be344969200b718547d8c5686e"
 dependencies = [
  "bincode",
  "hex",
@@ -5062,7 +5101,7 @@ dependencies = [
  "sha2",
  "sp1-core-executor",
  "sp1-core-machine",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-recursion-circuit",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
@@ -5101,7 +5140,7 @@ dependencies = [
  "sp1-core-executor",
  "sp1-core-machine",
  "sp1-derive",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
  "sp1-recursion-gnark-ffi",
@@ -5123,7 +5162,7 @@ dependencies = [
  "p3-symmetric",
  "serde",
  "sp1-core-machine",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-recursion-core",
  "sp1-recursion-derive",
  "sp1-stark",
@@ -5165,7 +5204,7 @@ dependencies = [
  "serde",
  "sp1-core-machine",
  "sp1-derive",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-stark",
  "static_assertions",
  "thiserror 1.0.69",
@@ -5239,11 +5278,11 @@ dependencies = [
  "reqwest-middleware",
  "serde",
  "serde_json",
- "sp1-build",
+ "sp1-build 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-core-executor",
  "sp1-core-machine",
  "sp1-cuda",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-prover",
  "sp1-stark",
  "strum",
@@ -5284,7 +5323,7 @@ dependencies = [
  "rayon-scan",
  "serde",
  "sp1-derive",
- "sp1-primitives",
+ "sp1-primitives 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "strum",
  "strum_macros",
  "sysinfo",
@@ -5294,8 +5333,7 @@ dependencies = [
 [[package]]
 name = "sp1-verifier"
 version = "4.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4d4609dbb9662e4619e35666ea5fd89ee3dee59c2822b9c9c09dc25f585e3be"
+source = "git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall#2ce184336547c2be344969200b718547d8c5686e"
 dependencies = [
  "cfg-if",
  "hex",
@@ -5308,8 +5346,7 @@ dependencies = [
 [[package]]
 name = "sp1-zkvm"
 version = "4.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92e382d2a6c183d602393e58881887fe91df32cc65965dd0be1f64e6fd689d73"
+source = "git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall#2ce184336547c2be344969200b718547d8c5686e"
 dependencies = [
  "cfg-if",
  "getrandom 0.2.15",
@@ -5317,8 +5354,8 @@ dependencies = [
  "libm",
  "rand 0.8.5",
  "sha2",
- "sp1-lib",
- "sp1-primitives",
+ "sp1-lib 4.1.7 (git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall)",
+ "sp1-primitives 4.1.7 (git+https://github.com/timewave-computer/sp1?branch=jonas%2Ffix-4.1.7-syscall)",
 ]
 
 [[package]]
@@ -5403,7 +5440,7 @@ dependencies = [
  "num-bigint 0.4.6",
  "rand 0.8.5",
  "rustc-hex",
- "sp1-lib",
+ "sp1-lib 4.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

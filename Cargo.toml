@@ -23,8 +23,10 @@ valence-smt = { path = "valence-coprocessor/crates/smt", features = ["memory"] }
 valence-coprocessor-core = { path = "valence-coprocessor/crates/core" }
 borsh = { version = "1.5.5", features = ["derive"] }
 types = { path = "types" }
-sp1-zkvm = "4.1.7"
-sp1-verifier = "4.1.7"
+# not a custom branch, just a small deps fix for the release tag 4.1.7
+sp1-zkvm = { git = "https://github.com/timewave-computer/sp1", branch = "jonas/fix-4.1.7-syscall" }
+# not a custom branch, just a small deps fix for the release tag 4.1.7
+sp1-verifier = { git = "https://github.com/timewave-computer/sp1", branch = "jonas/fix-4.1.7-syscall" }
 jonas-groth16 = { path = "jonas-groth16" }
 
 anyhow = { version = "=1.0.97", default-features = false }

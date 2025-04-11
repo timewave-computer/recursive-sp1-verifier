@@ -64,11 +64,14 @@ The reason for this is that the recursive verification failed with an ambiguous
 error related to precompiles. I assume the reason for this is that the recursive 
 circuit hasn't been tested / updated since 4.x.
 
-A fix is on the way, in the meantime this command will lock the dependency:
+A fix is on the way, in the meantime this command will lock the dependency (when using release tag 4.1.7):
 
 ```shell
 $ cargo update substrate-bn-succinct --precise 0.6.0-v4.1.4
 ```
+
+Update: For now I solved this with a custom checkout branch, we will set it to the next stable release soon
+e.g. 4.1.8. The bugfix was merged into the dev branch already, so it will be included in > 4.1.7.
 
 >[!NOTE]
 > We want to migrate to 4.x asap because it offers major performance benefits
