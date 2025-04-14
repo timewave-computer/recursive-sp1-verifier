@@ -85,6 +85,10 @@ See how the Risc0 circuit is called [here](https://github.com/timewave-computer/
 
 and how the SP1 circuit is called [here](https://github.com/timewave-computer/recursive-zk-verifier/blob/f71c09a2b59781452d710b528891d6d7d3edd828/prover/src/bin/main.rs#L228) and the logic [here](https://github.com/timewave-computer/recursive-zk-verifier/blob/master/smt-opening-proofs/src/main.rs).
 
+Click [here](https://github.com/timewave-computer/recursive-zk-verifier/blob/1ea2558b2295721839bf8e9b70be71e8d179d904/sha-benchmark-risc0/Cargo.toml#L13) to see where and how the Risc0 sha2 precompile is patched in the Risc0 workspace.
+
+Click [here](https://github.com/timewave-computer/recursive-zk-verifier/blob/1ea2558b2295721839bf8e9b70be71e8d179d904/Cargo.toml#L39) to see where and how the SP1 sha2 precompile is patched in the SP1 workspace.
+
 The same underlying SMT tree library is used and for each prover the respective SHA2 precompile is patched.
 I checked that the precompile was actually applied by scanning the lockfile.
 
